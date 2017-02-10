@@ -12,12 +12,12 @@
     <h1>Sandbox</h1>
     <section>
         <header>
-            <h2>Add a file</h2>
-            <p><b class="lead">Writing input data to a file in json format.</b></p>
+            <h2>Create</h2>
+            <p><b class="lead">Writing form data in json format to a file.</b></p>
         </header>
         <article>
-            <form method="post" action="files/">
-                <input type="text" name="name" placeholder="Enter the name..." required><br />
+            <form>
+                <input type="text" name="name" placeholder="Enter a name..." required><br />
                 <input type="text" name="content" placeholder="Provide some content..."><br />
                 <input type="submit" value="add">
             </form>
@@ -26,11 +26,21 @@
     </section>
     <section>
         <header>
-            <h2>All files</h2>
-            <p><b class="lead">Shows all files.</b></p>
+            <h2>View</h2>
+            <p><b class="lead">List all files.</b></p>
         </header>
         <article>
             <ul class='file-list'></ul>
+        </article>
+        <footer><span>&nbsp;</span></footer>
+    </section>
+    <section>
+        <header>
+            <h2>Update</h2>
+            <p><b class="lead">Show content of the file and allow update.</b></p>
+        </header>
+        <article>
+            <p class='file-content'>to be implemented...</p>
         </article>
         <footer><span>&nbsp;</span></footer>
     </section>
