@@ -6,12 +6,12 @@ $(function() {
     $('form').on('submit', function(event) {
         event.preventDefault();
         let form = $(this);
-        let data = form.serialize();
-        !
+        let formdata = form.serialize();
+
         $.ajax({
             type: 'PUT',
             url: '/files',
-            data: data
+            data: formdata
         }).done(function(name) {
             appendToList([name]);
             form.trigger('reset');
