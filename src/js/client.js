@@ -2,17 +2,27 @@ $(function() {
     'use strict';
 
     let $form = $('form');
+    let $file_content = $('#file_content');
+    let $file_list = $('#file_list');
 
     $.get('/files', appendToList);
 
-    $form.on('submit', create);
-
-    function create(event) {
-        $form.find('#form_alert').remove();
+    $form.on('submit', function(event) {
         event.preventDefault();
-        let form = $(this);
-        let formdata = form.serialize();
+        $form.find('#form_alert').remove();
+        create($form, $form.serialize());
+    });
 
+    $file_list.on('click', '#file_name', function(event) {
+        event.preventDefault();
+        getContent($(this));
+    });
+
+    function getContent(file) {
+        $.get(file.attr('href'), showContent);
+    }
+
+    function create(form, formdata) {
         $.ajax({
             type: 'PUT',
             url: '/files',
@@ -30,6 +40,31 @@ $(function() {
         });
     }
 
+    function showContent(content) {
+        $file_content.children('table').remove();
+
+        let $table = $('<table class="table table-hover">');
+        let rows = [];
+
+        let headers = [];
+        for (let property in content) {
+            if (content.hasOwnProperty(property)) {
+                headers.push($('<th>').text(property));
+            }
+        }
+        $table.append($('<thead>').append($('<tr>').append(headers)));
+
+        let cells = [];
+        for (let property in content) {
+            cells.push($('<td>').text(content[property]));
+        }
+        rows.push($('<tr>').append(cells));
+
+        $table.append($('<tbody>').append(rows));
+
+        $file_content.append($table);
+    }
+
     function showFormAlert(type, message) {
         $form.prepend('<div id="form_alert" class="alert alert-' + type + '" role="alert"><span>' + message + '</span></div>');
     }
@@ -43,9 +78,9 @@ $(function() {
     function appendToList(files) {
         let list = [];
         for (let i in files) {
-            list.push($('<a class="list-group-item" href="/files/' + files[i] + '"></a>').text(files[i]));
+            list.push($('<a id="file_name" class="list-group-item" href="/files/' + files[i] + '"></a>').text(files[i]));
         }
-        $('#file-list').append(list);
+        $('#file_list').append(list);
     }
 
     window.addEventListener('DOMContentLoaded', function appDCL() {

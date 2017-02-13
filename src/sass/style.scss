@@ -1,22 +1,17 @@
 // SASS style sheet */
 // Palette color codes */
 // Palette URL: http://paletton.com/#uid=22i050kN4DermTe-fQhJGqGI0jC */
-
 // Feel free to copy&paste color codes to your application */
-
-
 // As hex codes */
-
 $color-black: #000;
+$color-white: #fff;
 $color-gray-2: #ddd;
-
-$color-primary-0: #aef400;	// Main Primary color */
+$color-primary-0: #aef400; // Main Primary color */
 $color-primary-1: #befb25;
 $color-primary-2: #b2fa00;
 $color-primary-3: #8fc800;
 $color-primary-4: #699300;
-
-$color-complement-0: #d4008a;	// Main Complement color */
+$color-complement-0: #d4008a; // Main Complement color */
 $color-complement-1: #f123a9;
 $color-complement-2: #ec0099;
 $color-complement-3: #a4006b;
@@ -40,4 +35,10 @@ header {
 
 footer {
   background-color: $color-complement-0;
+}
+
+div {
+  table {
+    background-color: $color-white;
+  }
 }
