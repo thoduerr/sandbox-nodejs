@@ -1,21 +1,15 @@
 'use strict';
 
 const fs = require('fs');
-const path = require('path');
 
 function Directory(name, path) {
   this.name = name;
   this.path = path;
 }
 
-const root = new Directory('root', __dirname + "/");
-const pub = new Directory('public', __dirname + "public/");
-const data = new Directory('data', root.path + 'data/');
-
 const dirs = {
-    root: root,
-    pub: pub,
-    data: data
+    pub: new Directory('public', __dirname + "/public/"),
+    data: new Directory('data', __dirname + '/data/')
 };
 
 function ensureDirectoryExists(directory) {
