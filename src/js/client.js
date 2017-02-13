@@ -28,11 +28,10 @@ $(function() {
 
     function showFormAlert(type, message) {
         $('form').prepend('<div id="form-alert" class="alert alert-' + type + '" role="alert"><span>' + message + '</span></div>');
-        return;
     }
 
     function removeFormAlert() {
-        $('div#form-alert').delay(5000).fadeOut(1000, function() {
+        $('#form-alert').delay(5000).fadeOut(1000, function() {
             $(this).remove();
         });
     }
