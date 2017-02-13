@@ -12,10 +12,12 @@ const fs = require('fs');
 function File(name, content) {
     this.name = name;
     this.content = content;
+    
+    let now = +new Date();
     this.metadata = {
         version: 'v1',
-        created: +new Date(),
-        modified: +new Date()
+        created: now,
+        modified: now
     }
 }
 
