@@ -1,10 +1,14 @@
 $(function() {
     'use strict';
 
+    let $form = $('form');
+
     $.get('/files', appendToList);
 
-    $('form').on('submit', function(event) {
-        $('div#form-alert').remove();
+    $form.on('submit', create);
+
+    function create(event) {
+        $form.find('#form_alert').remove();
         event.preventDefault();
         let form = $(this);
         let formdata = form.serialize();
@@ -24,14 +28,14 @@ $(function() {
                 //form.trigger('reset');
             }
         });
-    });
+    }
 
     function showFormAlert(type, message) {
-        $('form').prepend('<div id="form-alert" class="alert alert-' + type + '" role="alert"><span>' + message + '</span></div>');
+        $form.prepend('<div id="form_alert" class="alert alert-' + type + '" role="alert"><span>' + message + '</span></div>');
     }
 
     function removeFormAlert() {
-        $('#form-alert').delay(5000).fadeOut(1000, function() {
+        $form.find('#form_alert').delay(5000).fadeOut(1000, function() {
             $(this).remove();
         });
     }
