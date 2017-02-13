@@ -35,6 +35,7 @@ const dirs = {
         main: 'app.js',
         watch: [
             'app.js',
+            'configuration.js',
             'lib',
             'views',
             'routes'

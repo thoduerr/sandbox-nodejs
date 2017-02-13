@@ -6,13 +6,13 @@ const bodyParser = require('body-parser');
 const parseUrlencoded = bodyParser.urlencoded({
     extended: false
 });
-const dataDirectory = __dirname +'/../data/';
+const configuration = require('../configuration');
 const fs = require('fs');
 
 router.route('/')
     .get((request, response) => {
       let allFiles = [];
-      fs.readdir(dataDirectory, (err, files) => {
+      fs.readdir(configuration.dirs.data.path, (err, files) => {
         if (err) {
             response.status(404).end();
             return console.log(err);
@@ -45,7 +45,7 @@ router.route('/')
 
         console.log("content: " + content);
 
-        fs.writeFile(dataDirectory + filename, content, function(err) {
+        fs.writeFile(configuration.dirs.data.path + filename, content, function(err) {
             if (err) {
                 response.status(500).end();
                 return console.log(err);
@@ -61,7 +61,7 @@ router.route('/:name')
         let filename = request.params.name + '.json';
         console.log("Requested file: " + filename);
 
-        fs.readFile(dataDirectory + filename, function(err, content) {
+        fs.readFile(configuration.dirs.data.path + filename, function(err, content) {
             if (err) {
                 response.status(404).end();
                 return console.log(err);

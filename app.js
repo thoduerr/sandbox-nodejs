@@ -1,13 +1,13 @@
 'use strict';
 
 //////////////////////////////
-// requestuiresponse
+// Requires
 //////////////////////////////
 const express = require('express');
 
 const path = require('path');
 
-const appEnv = require('./lib/env');
+const configuration = require('./configuration');
 const renderer = require('./lib/render');
 
 const bodyParser = require('body-parser');
@@ -15,19 +15,7 @@ const parseUrlencoded = bodyParser.urlencoded({
   extended: false
 });
 
-const fs = require('fs');
-fs.stat(appEnv.dataDirectory, function(err, stats) {
-  if (err) {
-    fs.mkdir(appEnv.dataDirectory, function(err) {
-      if (err) {
-        return console.log(err);
-      }
-      console.log("The '" + appEnv.dataDirectory + "' directory has been created!");
-    });
-  } else {
-    console.log("The '" + appEnv.dataDirectory + "' directory exists!");
-  }
-});
+configuration.setup();
 
 //////////////////////////////
 // App Variables
@@ -51,7 +39,7 @@ app.get('/', (request, response) => {
 //////////////////////////////
 // Start the server
 //////////////////////////////
-app.listen(appEnv.port, () => {
+app.listen(configuration.port, () => {
   // Mean to console.log out, so disabling
-  console.log(`Server starting on ${appEnv.url}`); // eslint-disable-line no-console
+  console.log(`Server starting on ${configuration.url}`); // eslint-disable-line no-console
 });
