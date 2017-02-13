@@ -13,12 +13,11 @@ function File(name, content) {
     this.name = name;
     this.content = content;
     
+    this.version = 'v1';
+
     let now = +new Date();
-    this.metadata = {
-        version: 'v1',
-        created: now,
-        modified: now
-    }
+    this.created = now;
+    this.modified = now;
 }
 
 router.route('/')

@@ -44,7 +44,8 @@ $(function() {
         $file_content.children('table').remove();
 
         let $table = $('<table class="table table-hover">');
-        let rows = [];
+        let $thead = $('<thead>');
+        let $tbody = $('<tbody>');
 
         let headers = [];
         for (let property in content) {
@@ -52,15 +53,19 @@ $(function() {
                 headers.push($('<th>').text(property));
             }
         }
-        $table.append($('<thead>').append($('<tr>').append(headers)));
+        $thead.append($('<tr>').append(headers));
 
+        let rows = [];
         let cells = [];
         for (let property in content) {
             cells.push($('<td>').text(content[property]));
         }
         rows.push($('<tr>').append(cells));
 
-        $table.append($('<tbody>').append(rows));
+        $tbody.append(rows)
+
+        $table.append($thead);
+        $table.append($tbody);
 
         $file_content.append($table);
     }
