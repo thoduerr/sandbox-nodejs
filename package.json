@@ -16,18 +16,18 @@
   "license": "Apache-2.0",
   "dependencies": {
     "body-parser": "^1.16.x",
-    "bootstrap": "^3.3.7",
+    "bootstrap": "^3.3.x",
     "express": "^4.14.x",
-    "jquery": "^3.1.1"
+    "jquery": "^3.1.x"
   },
   "devDependencies": {
     "browser-sync": "^2.8.x",
     "gulp": "^3.9.x",
-    "gulp-imagemin": "^2.3.x",
+    "gulp-imagemin": "^3.1.x",
     "gulp-nodemon": "^2.0.x",
-    "gulp-sass": "^2.0.x",
+    "gulp-sass": "^3.1.x",
     "gulp-sass-lint": "^1.1.x",
-    "gulp-uglify": "^1.2.x",
+    "gulp-uglify": "^2.0.x",
     "sass-toolkit": "^2.10.x"
   },
   "engines": {

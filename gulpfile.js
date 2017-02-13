@@ -28,14 +28,13 @@ const dirs = {
         },
         uglify: [
             'src/js/**/*.js',
-            //'!src/js/**/*.min.js'
+            '!src/js/**/*.min.js'
         ]
     },
     server: {
         main: 'app.js',
         watch: [
             'app.js',
-            'configuration.js',
             'lib',
             'views',
             'routes'
