@@ -4,17 +4,14 @@
 // Requires
 //////////////////////////////
 const express = require('express');
-
-const path = require('path');
-
-const configuration = require('./configuration');
 const renderer = require('./lib/render');
-
 const bodyParser = require('body-parser');
 const parseUrlencoded = bodyParser.urlencoded({
   extended: false
 });
 
+const path = require('path');
+const configuration = require('./configuration');
 configuration.setup();
 
 //////////////////////////////
@@ -26,6 +23,11 @@ app.engine('html', renderer);
 app.set('view engine', 'html');
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+// redirect to nodejs library
+app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js')); // redirect bootstrap JS
+app.use('/js', express.static(__dirname + '/node_modules/jquery/dist')); // redirect JS jQuery
+app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); // redirect CSS bootstrap
 
 // routes
 const files = require('./routes/files');
