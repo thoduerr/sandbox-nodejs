@@ -18,17 +18,17 @@ const dirs = {
     data: data
 };
 
-function ensureDirectoryExists() {
-    fs.stat(dirs.data.path, function(err, stats) {
+function ensureDirectoryExists(directory) {
+    fs.stat(directory.path, function(err, stats) {
         if (err) {
-            fs.mkdir(dirs.data.path, function(err) {
+            fs.mkdir(directory.path, function(err) {
                 if (err) {
                     return console.log(err);
                 }
-                console.log("The '" + dirs.data.name + "' directory has been created!");
+                console.log("The '" + directory.name + "' directory has been created!");
             });
         } else {
-            console.log("The '" + dirs.data.name + "' directory exists!");
+            console.log("The '" + directory.name + "' directory exists!");
         }
     });
 }
@@ -38,6 +38,6 @@ module.exports = {
     port: '6000',
     dirs: dirs,
     setup: function() {
-        ensureDirectoryExists();
+        ensureDirectoryExists(dirs.data);
     }
 };
