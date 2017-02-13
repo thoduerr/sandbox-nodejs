@@ -32,7 +32,7 @@ app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
 // routes
 const files = require('./routes/files');
 app.use('/files', files);
-// for each resource...
+// create a new route for each resource...
 
 app.get('/', (request, response) => {
   response.render('index');

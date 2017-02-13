@@ -4,7 +4,7 @@ $(function() {
     $.get('/files', appendToList);
 
     $('form').on('submit', function(event) {
-        $('div#alert').remove();
+        $('div#form-alert').remove();
         event.preventDefault();
         let form = $(this);
         let formdata = form.serialize();
@@ -14,16 +14,28 @@ $(function() {
             url: '/files',
             data: formdata,
             success: function(response) {
-                $('form').prepend('<div id="alert" class="alert alert-success" role="alert"><span>"' + response + '" created</span></div>');
+                showFormAlert('success', '"' + response + '" created.');
                 appendToList([response]);
                 form.trigger('reset');
+                removeFormAlert();
             },
             error: function(response) {
-                $('form').prepend('<div id="alert" class="alert alert-danger" role="alert"><span>"' + JSON.parse(response.responseText) + '" already exist</span></div>');
+                showFormAlert('danger', '"' + JSON.parse(response.responseText) + '" already exists.');
                 //form.trigger('reset');
             }
         });
     });
+
+    function showFormAlert(type, message) {
+        $('form').prepend('<div id="form-alert" class="alert alert-' + type + '" role="alert"><span>' + message + '</span></div>');
+        return;
+    }
+
+    function removeFormAlert() {
+        $('div#form-alert').delay(5000).fadeOut(1000, function() {
+            $(this).remove();
+        });
+    }
 
     function appendToList(files) {
         let list = [];
