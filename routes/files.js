@@ -9,6 +9,16 @@ const parseUrlencoded = bodyParser.urlencoded({
 const configuration = require('../configuration');
 const fs = require('fs');
 
+function File(name, content) {
+    this.name = name;
+    this.content = content;
+    this.metadata = {
+        version: 'v1',
+        created: +new Date(),
+        modified: +new Date()
+    }
+}
+
 router.route('/')
     .get((request, response) => {
         let allFiles = [];
@@ -26,7 +36,7 @@ router.route('/')
     })
     .put(parseUrlencoded, (request, response) => {
         if (request.body.name.length < 1) {
-            response.status(400).end();
+            response.status(400).json(request.body.name).end();
             return console.log("Invalid filename");
         }
 
@@ -40,20 +50,14 @@ router.route('/')
                 console.log("Adding file: " + filename);
 
                 // content template
-                let content = JSON.stringify({
-                    "name": request.body.name,
-                    "content": request.body.content,
-                    "metadata": {
-                        "created": +new Date(),
-                        "modified": +new Date()
-                    }
-                });
+                let content = JSON.stringify(
+                    new File(request.body.name, request.body.content));
 
                 console.log("content: " + content);
 
                 fs.writeFile(configuration.dirs.data.path + filename, content, function(err) {
                     if (err) {
-                        response.status(500).end();
+                        response.status(500).json(request.body.name).end();
                         return console.log(err);
                     }
                     console.log("Saved file!");
