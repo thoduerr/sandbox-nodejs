@@ -13,12 +13,13 @@ $(function() {
             type: 'PUT',
             url: '/files',
             data: formdata,
-            success: function(name) {
-                appendToList([name]);
+            success: function(response) {
+                $('form').prepend('<div id="alert" class="alert alert-success" role="alert"><span>"' + response + '" created</span></div>');
+                appendToList([response]);
                 form.trigger('reset');
             },
-            error: function(name) {
-                $('form').prepend('<div id="alert" class="alert alert-danger" role="alert"><span>File "' + JSON.parse(name.responseText) + '" already exist</span></div>');
+            error: function(response) {
+                $('form').prepend('<div id="alert" class="alert alert-danger" role="alert"><span>"' + JSON.parse(response.responseText) + '" already exist</span></div>');
                 //form.trigger('reset');
             }
         });
