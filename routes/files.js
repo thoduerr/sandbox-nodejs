@@ -31,7 +31,14 @@ router.route('/')
             }
 
             files.forEach(file => {
-                allFiles.push(file.replace(file_extension, ''));
+                if (request.query.filter != undefined) {
+                    let match = file.match(new RegExp(request.query.filter, 'i', 'g'));
+                    if (match != null && match.length > 0) {
+                        allFiles.push(file.replace(file_extension, ''));
+                    }
+                } else {
+                    allFiles.push(file.replace(file_extension, ''));
+                }
             });
             response.status(200).json(allFiles);
         });
