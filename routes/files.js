@@ -8,16 +8,17 @@ const parseUrlencoded = bodyParser.urlencoded({
 });
 const configuration = require('../configuration');
 const fs = require('fs');
+const file_extension = '.json';
 
 function File(name, content) {
     this.name = name;
     this.content = content;
-    
-    this.version = 'v1';
 
-    let now = +new Date();
-    this.created = now;
-    this.modified = now;
+    this.version = 1;
+
+    let now = new Date();
+    this.created = now.toISOString(); // save as UTC, calculate back on client side
+    this.modified = now.toISOString();
 }
 
 router.route('/')
@@ -30,7 +31,7 @@ router.route('/')
             }
 
             files.forEach(file => {
-                allFiles.push(file.replace('.json', ''));
+                allFiles.push(file.replace(file_extension, ''));
             });
             response.status(200).json(allFiles);
         });
@@ -41,7 +42,7 @@ router.route('/')
             return console.log("Invalid filename");
         }
 
-        let filename = request.body.name + ".json";
+        let filename = request.body.name + file_extension;
 
         fs.stat(configuration.dirs.data.path + filename, function(err, stats) {
             if (err == null) {
@@ -71,7 +72,7 @@ router.route('/')
 
 router.route('/:name')
     .get((request, response) => {
-        let filename = request.params.name + '.json';
+        let filename = request.params.name + file_extension;
         console.log("Requested file: " + filename);
 
         fs.readFile(configuration.dirs.data.path + filename, function(err, content) {

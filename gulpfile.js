@@ -70,6 +70,7 @@ gulp.task('sass:watch', function() {
 gulp.task('uglify', function() {
     return gulp.src(dirs.js.uglify)
         .pipe(gulp.dest(dirs.public + 'js'))
+        // .pipe(uglify()) Currently not working for ES6 code
         .pipe(browserSync.stream());
 });
 

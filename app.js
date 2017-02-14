@@ -24,15 +24,15 @@ app.set('view engine', 'html');
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// redirect to nodejs library
-app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js')); // redirect bootstrap JS
+// redirect to nodejs modules
 app.use('/js', express.static(__dirname + '/node_modules/jquery/dist')); // redirect JS jQuery
+app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js')); // redirect bootstrap JS
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); // redirect CSS bootstrap
 
 // routes
 const files = require('./routes/files');
 app.use('/files', files);
-// create a new route for each resource...
+// add a new route for each resource...
 
 app.get('/', (request, response) => {
   response.render('index');
