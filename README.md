@@ -2,7 +2,8 @@
 
 ## Prereq
 
-- nodejs
+- nodejs installation
+- Gulp: 'npm install gulp -g'
 
 ## Usage
 - Clone this repository
