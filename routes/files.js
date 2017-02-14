@@ -23,6 +23,8 @@ function File(name, content) {
 
 router.route('/')
     .get((request, response) => {
+        console.log("Returning all files...");
+
         let allFiles = [];
         fs.readdir(configuration.dirs.data.path, (err, files) => {
             if (err) {
@@ -30,16 +32,22 @@ router.route('/')
                 return console.log(err);
             }
 
-            files.forEach(file => {
-                if (request.query.filter != undefined) {
-                    let match = file.match(new RegExp(request.query.filter, 'i', 'g'));
+            if (request.query.filter != undefined) {
+                console.log("Filtering by: " + request.query.filter);
+                let regexp = new RegExp(request.query.filter, 'i', 'g');
+                files.forEach(file => {
+                    let name = file.replace(file_extension, '');
+                    let match = name.match(regexp);
                     if (match != null && match.length > 0) {
-                        allFiles.push(file.replace(file_extension, ''));
+                        allFiles.push(name);
                     }
-                } else {
+                });
+            } else {
+                files.forEach(file => {
                     allFiles.push(file.replace(file_extension, ''));
-                }
-            });
+                });
+            }
+
             response.status(200).json(allFiles);
         });
     })
