@@ -14,36 +14,54 @@ $(function() {
     $form.on('submit', function(event) {
         event.preventDefault();
         $form.find('#form_alert').remove();
-        createFile($form, $form.serialize());
+        createFile($form);
     });
 
     $file_list.on('click', '#file_name', function(event) {
         event.preventDefault();
-        getFileContent($(this));
+        getFileContent($(this), renderFileContent);
+    });
+
+    $file_content.on('click', 'td', function(event) {
+        if ($(this).has('input').length) {
+            // ignore if is same cell
+            return;
+        }
+
+        renderInput($(this));
+    });
+
+    $file_content.on('focusout keydown', 'input', function(event) {
+        if (event.keyCode !== 13) {
+            // Not 'enter' pressed
+            return;
+        }
+        // focus lost or enter pressed
+        updateFileContent($(this), renderFileContent);
     });
 
     ///////////////////////////////////////////
     // Execute when loaded
     ///////////////////////////////////////////
-    getAllFileNames();
+    getAllFileNames(renderFileList);
 
 
     ///////////////////////////////////////////
     // REST API client functions
     ///////////////////////////////////////////
-    function getAllFileNames() {
-        $.get('/files', renderFileList);
+    function getAllFileNames(render) {
+        $.get('/files', render);
     }
 
-    function getFileContent(file_name) {
-        $.get(file_name.attr('href'), renderFileContent);
+    function getFileContent(file_name, render) {
+        $.get(file_name.attr('href'), render);
     }
 
-    function createFile(form, formdata) {
+    function createFile(form) {
         $.ajax({
             type: 'PUT',
             url: '/files',
-            data: formdata,
+            data: $form.serialize(),
             success: function(response) {
                 renderFormAlert('success', '"' + response + '" created.');
                 renderFileList([response]);
@@ -56,6 +74,39 @@ $(function() {
             }
         });
     }
+
+    function updateFileContent(input, render) {
+        let value = input[0].value;
+        if (value === input.attr('placeholder')) {
+            // nothing to do
+            return;
+        }
+
+        let id = input.parent().attr('id').split('_');
+        let name = id[0];
+        let property_name = id[1];
+
+        let property = {};
+        property[property_name] = value;
+
+        let properties = [];
+        properties.push(property);
+
+        $.ajax({
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            url: '/files/' + name,
+            data: JSON.stringify(properties),
+            dataType: 'json',
+            success: function(response) {
+                render(response);
+            },
+            error: function(response) {
+                console.log('error: ' + response);
+            }
+        });
+    }
+
 
     ///////////////////////////////////////////
     // Render functions
@@ -75,19 +126,28 @@ $(function() {
         }
         $thead.append($('<tr>').append(headers));
 
-        let rows = [];
-        let cells = [];
-        for (let property in content) {
-            cells.push($('<td>').text(content[property]));
-        }
-        rows.push($('<tr>').append(cells));
-
-        $tbody.append(rows)
+        $tbody.append(renderRows([content]));
 
         $table.append($thead);
         $table.append($tbody);
 
         $file_content.append($table);
+    }
+
+    function renderRows(contents) {
+        let rows = [];
+        for (let i in contents) {
+            rows.push($('<tr id="' + contents[i].name + '">').append(renderCellContent(contents[i])));
+        }
+        return rows;
+    }
+
+    function renderCellContent(content) {
+        let cells = [];
+        for (let property in content) {
+            cells.push($('<td id="' + content.name + '_' + property + '">').text(content[property]));
+        }
+        return cells;
     }
 
     function removeFileContent() {
@@ -110,5 +170,23 @@ $(function() {
             list.push($('<a id="file_name" class="list-group-item" href="/files/' + files[i] + '"></a>').text(files[i]));
         }
         $('#file_list').append(list);
+    }
+
+    function renderInput(cell) {
+        rerenderCell(cell);
+
+        //let value = cell.text().encode();
+        let value = cell.text();
+        cell.text('');
+        cell.append('<input class="form-control" type="text" name="name" value="' + value + '" placeholder="' + value + '"required>');
+    }
+
+    function rerenderCell(cell) {
+        cell.siblings().each(function() {
+            $(this).children('input').each(function() {
+                $(this).parent().text($(this)[0].value);
+            });
+            $(this).children('input').remove();
+        });
     }
 }());

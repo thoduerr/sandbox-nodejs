@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const parseUrlencoded = bodyParser.urlencoded({
     extended: false
 });
+const parseJSON = bodyParser.json();
 const configuration = require('../configuration');
 const fs = require('fs');
 const file_extension = '.json';
@@ -96,6 +97,43 @@ router.route('/:name')
                 return console.log(err);
             }
             response.status(200).json(JSON.parse(content));
+        });
+    })
+    .post(parseJSON, (request, response) => {
+        let filename = request.params.name + file_extension;
+        console.log("Updating file: " + filename);
+        console.log('properties: ' + JSON.stringify(request.body));
+
+        if (request.body.length < 1) {
+            response.status(400).json(request.body).end();
+            return console.log("Nothing to update.");
+        }
+
+        fs.readFile(configuration.dirs.data.path + filename, function(err, content) {
+            if (err) {
+                response.status(404).end();
+                return console.log(err);
+            }
+
+            content = JSON.parse(content);
+            for (let i in request.body) {
+                let property = request.body[i];
+                for (let p in property) {
+                    content[p] = property[p];
+                }
+            }
+
+            content.modified = new Date().toISOString();
+            fs.writeFile(configuration.dirs.data.path + filename, JSON.stringify(content), function(err) {
+                if (err) {
+                    response.status(500).json(request.body.name).end();
+                    return console.log(err);
+                }
+
+                console.log("Saved file!");
+            });
+
+            response.status(200).json(content);
         });
     });
 
