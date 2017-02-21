@@ -16,16 +16,6 @@ const browserSync = require('browser-sync').create();
 //////////////////////////////
 const dirs = {
     js: {
-        lint: {
-            browser: [
-                'src/**/*.js',
-                '!src/**/*.min.js'
-            ],
-            node: [
-                'index.js',
-                'lib/**/*.js',
-            ],
-        },
         uglify: [
             'src/js/**/*.js',
             '!src/js/**/*.min.js'
