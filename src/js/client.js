@@ -22,9 +22,9 @@ $(function() {
         getFileContent($(this), renderFileContent);
     });
 
-    $file_content.on('click', 'td', function(event) {
+    $file_content.on('click', 'td', function() {
         if ($(this).has('input').length) {
-            // ignore if is same cell
+            // ignore if same cell
             return;
         }
 
@@ -32,11 +32,11 @@ $(function() {
     });
 
     $file_content.on('focusout keydown', 'input', function(event) {
-        if (event.keyCode !== 13) {
-            // Not 'enter' pressed
+        if (event.type === 'keydown' && event.keyCode !== 13) {
+            // do nothing
             return;
         }
-        // focus lost or enter pressed
+        // focus out or enter pressed
         updateFileContent($(this), renderFileContent);
     });
 
@@ -112,7 +112,7 @@ $(function() {
     // Render functions
     ///////////////////////////////////////////
     function renderFileContent(content) {
-        removeFileContent()
+        removeFileContent();
 
         let $table = $('<table class="table table-hover">');
         let $thead = $('<thead>');

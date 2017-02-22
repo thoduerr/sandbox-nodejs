@@ -24,17 +24,17 @@ function File(name, content) {
 
 router.route('/')
     .get((request, response) => {
-        console.log("Returning all files...");
+        console.log('Returning all files...');
 
         let allFiles = [];
         fs.readdir(configuration.dirs.data.path, (err, files) => {
             if (err) {
                 response.status(404).end();
-                return console.log(err);
+                return console.error(err);
             }
 
             if (request.query.filter != undefined) {
-                console.log("Filtering by: " + request.query.filter);
+                console.log('Filtering by: ' + request.query.filter);
                 let regexp = new RegExp(request.query.filter, 'i', 'g');
                 files.forEach(file => {
                     let name = file.replace(file_extension, '');
@@ -55,30 +55,30 @@ router.route('/')
     .put(parseUrlencoded, (request, response) => {
         if (request.body.name.length < 1) {
             response.status(400).json(request.body.name).end();
-            return console.log("Invalid filename");
+            return console.error('Invalid filename');
         }
 
         let filename = request.body.name + file_extension;
 
-        fs.stat(configuration.dirs.data.path + filename, function(err, stats) {
+        fs.stat(configuration.dirs.data.path + filename, function(err) {
             if (err == null) {
                 response.status(409).json(request.body.name).end();
-                return console.log("File exists: " + filename);
+                return console.error('File exists: ' + filename);
             } else {
-                console.log("Adding file: " + filename);
+                console.log('Adding file: ' + filename);
 
                 // content template
                 let content = JSON.stringify(
                     new File(request.body.name, request.body.content));
 
-                console.log("content: " + content);
+                console.log('content: ' + content);
 
                 fs.writeFile(configuration.dirs.data.path + filename, content, function(err) {
                     if (err) {
                         response.status(500).json(request.body.name).end();
-                        return console.log(err);
+                        return console.error(err);
                     }
-                    console.log("Saved file!");
+                    console.log('Saved file!');
                 });
 
                 response.status(201).json(request.body.name);
@@ -89,30 +89,30 @@ router.route('/')
 router.route('/:name')
     .get((request, response) => {
         let filename = request.params.name + file_extension;
-        console.log("Requested file: " + filename);
+        console.log('Requested file: ' + filename);
 
         fs.readFile(configuration.dirs.data.path + filename, function(err, content) {
             if (err) {
                 response.status(404).end();
-                return console.log(err);
+                return console.error(err);
             }
             response.status(200).json(JSON.parse(content));
         });
     })
     .post(parseJSON, (request, response) => {
         let filename = request.params.name + file_extension;
-        console.log("Updating file: " + filename);
+        console.log('Updating file: ' + filename);
         console.log('properties: ' + JSON.stringify(request.body));
 
         if (request.body.length < 1) {
             response.status(400).json(request.body).end();
-            return console.log("Nothing to update.");
+            return console.log('Nothing to update.');
         }
 
         fs.readFile(configuration.dirs.data.path + filename, function(err, content) {
             if (err) {
                 response.status(404).end();
-                return console.log(err);
+                return console.error(err);
             }
 
             content = JSON.parse(content);
@@ -127,10 +127,10 @@ router.route('/:name')
             fs.writeFile(configuration.dirs.data.path + filename, JSON.stringify(content), function(err) {
                 if (err) {
                     response.status(500).json(request.body.name).end();
-                    return console.log(err);
+                    return console.error(err);
                 }
 
-                console.log("Saved file!");
+                console.log('Saved file!');
             });
 
             response.status(200).json(content);

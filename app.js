@@ -5,10 +5,6 @@
 //////////////////////////////
 const express = require('express');
 const renderer = require('./lib/render');
-const bodyParser = require('body-parser');
-const parseUrlencoded = bodyParser.urlencoded({
-  extended: false
-});
 
 const path = require('path');
 const configuration = require('./configuration');
@@ -35,13 +31,13 @@ app.use('/files', files);
 // add a new route for each resource...
 
 app.get('/', (request, response) => {
-  response.render('index');
+    response.render('index');
 });
 
 //////////////////////////////
 // Start the server
 //////////////////////////////
 app.listen(configuration.port, () => {
-  // Mean to console.log out, so disabling
-  console.log(`Server starting on ${configuration.url}`); // eslint-disable-line no-console
+    // Mean to console.log out, so disabling
+    console.log(`Server starting on ${configuration.url}`); // eslint-disable-line no-console
 });
