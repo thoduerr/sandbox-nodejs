@@ -1,6 +1,6 @@
-$(init);
+$(client);
 
-function init() {
+function client() {
     'use strict';
 
     ///////////////////////////////////////////
@@ -71,7 +71,9 @@ function init() {
         $.ajax({
             type: 'PUT',
             url: '/files',
-            data: $form.serialize(),
+            contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+            accept: 'application/json',
+            data: form.serialize(),
             success: function(response) {
                 renderFormAlert('success', '"' + response + '" created.');
                 renderFileList([response]);
@@ -104,8 +106,9 @@ function init() {
 
         $.ajax({
             type: 'POST',
-            contentType: 'application/json; charset=utf-8',
             url: '/files/' + name,
+            contentType: 'application/json; charset=utf-8',
+            accept: 'application/json',
             data: JSON.stringify(properties),
             dataType: 'json',
             success: function(response) {
