@@ -24,6 +24,12 @@ function client() {
         getFileContent($(this), renderFileContent);
     }
 
+    function onClickRemoveFileByName(event) {
+        event.preventDefault();
+        event.stopPropagation(); // do not trigger parent
+        deleteFile($(this), removeFileName);
+    }
+
     function onClickFileContentCell() {
         if ($(this).has('input').length) {
             // ignore if same cell
@@ -47,6 +53,7 @@ function client() {
     ///////////////////////////////////////////
     $form.on('submit', onSubmitForm);
     $file_list.on('click', '#file_name', onClickFileName);
+    $file_list.on('click', '#remove_file_by_name', onClickRemoveFileByName);
     $file_content.on('click', 'td', onClickFileContentCell);
     $file_content.on('focusout keydown', 'input', onFocusoutKeydownInput);
 
@@ -54,7 +61,6 @@ function client() {
     // Execute when loaded
     ///////////////////////////////////////////
     getAllFileNames(renderFileList);
-
 
     ///////////////////////////////////////////
     // REST API client functions
@@ -83,6 +89,19 @@ function client() {
             error: function(response) {
                 renderFormAlert('danger', '"' + JSON.parse(response.responseText) + '" already exists.');
                 //form.trigger('reset');
+            }
+        });
+    }
+
+    function deleteFile(remove_file_by_name, render) {
+        $.ajax({
+            type: 'DELETE',
+            url: remove_file_by_name.attr('href'),
+            success: function() {
+                render(remove_file_by_name);
+            },
+            error: function() {
+                console.log('Cannot delete: ' + remove_file_by_name.attr('href'));
             }
         });
     }
@@ -180,15 +199,22 @@ function client() {
     function renderFileList(files) {
         let list = [];
         for (let i in files) {
-            list.push($('<a id="file_name" class="list-group-item" href="/files/' + files[i] + '"></a>').text(files[i]));
+            let remove = '<a id="remove_file_by_name" href="/files/' + files[i] + '"><span class="glyphicon glyphicon-remove" aria-hidden="true"></a>';
+            let a = $('<a id="file_name" class="list-group-item" href="/files/' + files[i] + '">').html(files[i] + ' ' + remove);
+            list.push(a);
         }
         $('#file_list').append(list);
+    }
+
+    function removeFileName(remove_file_by_name) {
+        remove_file_by_name.parent().remove();
+        $file_content.children('table').remove(); // TODO
     }
 
     function renderInput(cell) {
         rerenderCell(cell);
 
-        //let value = cell.text().encode();
+        //TODO let value = cell.text().encode();
         let value = cell.text();
         cell.text('');
         cell.append('<input class="form-control" type="text" name="name" value="' + value + '" placeholder="' + value + '"required>');

@@ -135,6 +135,18 @@ router.route('/:name')
 
             response.status(200).json(content);
         });
+    })
+    .delete(parseJSON, (request, response) => {
+        let filename = request.params.name + file_extension;
+        console.log('Deleting file: ' + filename);
+
+        fs.unlink(configuration.dirs.data.path + filename, function(err, content) {
+            if (err) {
+                response.status(404).end();
+                return console.error(err);
+            }
+            response.status(200).end();
+        });
     });
 
 module.exports = router;
