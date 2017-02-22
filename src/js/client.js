@@ -1,44 +1,54 @@
-$(function() {
+$(init);
+
+function init() {
     'use strict';
 
     ///////////////////////////////////////////
     // Cache static selectors
     ///////////////////////////////////////////
-    let $form = $('form');
+    let $form = $('#file_add');
     let $file_content = $('#file_content');
     let $file_list = $('#file_list');
 
     ///////////////////////////////////////////
-    // Subscribe event listeners
+    // handle events
     ///////////////////////////////////////////
-    $form.on('submit', function(event) {
+    function onSubmitForm(event) {
         event.preventDefault();
         $form.find('#form_alert').remove();
         createFile($form);
-    });
+    }
 
-    $file_list.on('click', '#file_name', function(event) {
+    function onClickFileName(event) {
         event.preventDefault();
         getFileContent($(this), renderFileContent);
-    });
+    }
 
-    $file_content.on('click', 'td', function() {
+    function onClickFileContentCell() {
         if ($(this).has('input').length) {
             // ignore if same cell
             return;
         }
 
         renderInput($(this));
-    });
+    }
 
-    $file_content.on('focusout keydown', 'input', function(event) {
+    function onFocusoutKeydownInput(event) {
         if (event.type === 'keydown' && event.keyCode !== 13) {
             // do nothing
             return;
         }
         // focus out or enter pressed
         updateFileContent($(this), renderFileContent);
-    });
+    }
+
+    ///////////////////////////////////////////
+    // Subscribe event listeners
+    ///////////////////////////////////////////
+    $form.on('submit', onSubmitForm);
+    $file_list.on('click', '#file_name', onClickFileName);
+    $file_content.on('click', 'td', onClickFileContentCell);
+    $file_content.on('focusout keydown', 'input', onFocusoutKeydownInput);
 
     ///////////////////////////////////////////
     // Execute when loaded
@@ -189,4 +199,4 @@ $(function() {
             $(this).children('input').remove();
         });
     }
-}());
+}
