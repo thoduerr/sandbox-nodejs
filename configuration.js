@@ -1,15 +1,26 @@
 'use strict';
 
 const fs = require('fs');
+const path = require('path');
 
 function Directory(name, path) {
-  this.name = name;
-  this.path = path;
+    this.name = name;
+    this.path = path;
 }
 
 const dirs = {
-    pub: new Directory('public', __dirname + "/public/"),
-    data: new Directory('data', __dirname + '/data/')
+    pub: new Directory('public', path.join(__dirname, 'public')),
+    data: new Directory('data', path.join(__dirname, 'data')),
+    js: {
+        jquery: new Directory('jquery', path.join(__dirname, 'node_modules/jquery/dist')),
+        bootstrap: new Directory('bootstrap', path.join(__dirname, 'node_modules/bootstrap/dist/js'))
+    },
+    css: {
+        bootstrap: new Directory('bootstrap', path.join(__dirname, 'node_modules/bootstrap/dist/css'))
+    },
+    fonts: {
+        bootstrap: new Directory('bootstrap', path.join(__dirname, 'node_modules/bootstrap/dist/fonts'))
+    }
 };
 
 function ensureDirectoryExists(directory) {

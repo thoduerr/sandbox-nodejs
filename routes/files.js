@@ -22,6 +22,10 @@ function File(name, content) {
     this.modified = now.toISOString();
 }
 
+function getFilePath(filename) {
+    return configuration.dirs.data.path + '/' + filename;
+}
+
 router.route('/')
     .get((request, response) => {
         console.log('Returning all files...');
@@ -60,7 +64,7 @@ router.route('/')
 
         let filename = request.body.name + file_extension;
 
-        fs.stat(configuration.dirs.data.path + filename, function(err) {
+        fs.stat(getFilePath(filename), function(err) {
             if (err == null) {
                 response.status(409).json(request.body.name).end();
                 return console.error('File exists: ' + filename);
@@ -73,7 +77,7 @@ router.route('/')
 
                 console.log('content: ' + content);
 
-                fs.writeFile(configuration.dirs.data.path + filename, content, function(err) {
+                fs.writeFile(getFilePath(filename), content, function(err) {
                     if (err) {
                         response.status(500).json(request.body.name).end();
                         return console.error(err);
@@ -91,7 +95,7 @@ router.route('/:name')
         let filename = request.params.name + file_extension;
         console.log('Requested file: ' + filename);
 
-        fs.readFile(configuration.dirs.data.path + filename, function(err, content) {
+        fs.readFile(getFilePath(filename), function(err, content) {
             if (err) {
                 response.status(404).end();
                 return console.error(err);
@@ -109,7 +113,7 @@ router.route('/:name')
             return console.log('Nothing to update.');
         }
 
-        fs.readFile(configuration.dirs.data.path + filename, function(err, content) {
+        fs.readFile(getFilePath(filename), function(err, content) {
             if (err) {
                 response.status(404).end();
                 return console.error(err);
@@ -124,7 +128,7 @@ router.route('/:name')
             }
 
             content.modified = new Date().toISOString();
-            fs.writeFile(configuration.dirs.data.path + filename, JSON.stringify(content), function(err) {
+            fs.writeFile(getFilePath(filename), JSON.stringify(content), function(err) {
                 if (err) {
                     response.status(500).json(request.body.name).end();
                     return console.error(err);
@@ -140,7 +144,7 @@ router.route('/:name')
         let filename = request.params.name + file_extension;
         console.log('Deleting file: ' + filename);
 
-        fs.unlink(configuration.dirs.data.path + filename, function(err, content) {
+        fs.unlink(getFilePath(filename), function(err) {
             if (err) {
                 response.status(404).end();
                 return console.error(err);
